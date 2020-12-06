@@ -1,0 +1,43 @@
+<?php
+require_once 'connection.php'; // подключаем скрипт
+$link = mysqli_connect($host, $user, $password, $database);
+if($link == false)
+	{
+	print("Ошибка: Невозможно подключится". mysqli_connect_error());
+	}
+	else	
+	{
+	print("Соединение установлено успешно");
+	}
+if(isset($_POST['name']) && isset($_POST['num']) && isset($_POST['byc'])&& isset($_POST['mes'])){	
+	// экранирования символов для mysql
+	$name = htmlentities(mysqli_real_escape_string($link, $_POST['name']));
+	$num = htmlentities(mysqli_real_escape_string($link,$_POST['num']));
+	$byc = htmlentities(mysqli_real_escape_string($link,$_POST['byc']));
+	$mes = htmlentities(mysqli_real_escape_string($link,$_POST['mes']));
+	// создание строки запроса
+	$query ="INSERT INTO zakaz VALUES('$name','$num','$byc','$mes')";
+	// выполняем запрос
+	$result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+	// закрываем подключение
+	if($result)
+	{
+		echo 'данные добавлены';
+	}
+	mysqli_close($link);
+}
+?>
+<link href="css/reg.css" rel="stylesheet">
+<form method="POST" class="decor">
+  <div class="form-left-decoration"></div>
+  <div class="form-right-decoration"></div>
+  <div class="circle"></div>
+  <div class="form-inner">
+    <h3>Заявка на диагностику</h3>
+    <input type="text" name="name" placeholder="Имя">
+    <input type="text"  name="num" placeholder="Телефон (7xxxxxxxxxx)">
+    <input type="text"  name="byc" placeholder="Велосипед">
+    <input type="text" name="mes" placeholder="Сообщение">
+    <input type="submit" value="Отправить">
+  </div>
+</form>
